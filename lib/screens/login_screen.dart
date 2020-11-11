@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sms_maintained/sms.dart';
 import '../providers/auth.dart';
 import '../widgets/button.dart';
 import '../widgets/text_form_field_style.dart';
@@ -17,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _authData = {
-    'School_name': '',
+    'schoolName': '',
     'password': '',
   };
   var _isLoading = false;
@@ -46,23 +47,25 @@ class _LoginScreenState extends State<LoginScreen> {
     _formKey.currentState.save();
     setState(() {
       _isLoading = true;
-      print(_authData['School_name']);
+      print(_authData['schoolName']);
       print(_authData['password']);
     });
     try {
-      // await print(_authData['School_name']);
-      await Provider.of<Auth>(context, listen: false)
-          .signIn(_authData['School_name'], _authData['password']);
+      // await print(_authData['schoolName']);
+      await Provider.of<Auth>(context, listen: false).authethicate(
+        _authData['schoolName'],
+        _authData['password'],
+      );
     } on HttpException catch (error) {
       var errormessage = 'Authethication failed';
-      if (error.toString().contains('Unknown School_name address.')) {
+      if (error.toString().contains('Unknown schoolName address.')) {
         errormessage =
-            'Unknown School_name address. Check again or try your username';
+            'Unknown schoolName address. Check again or try your username';
       } else if (error.toString().contains('[jwt_auth] incorrect_password')) {
         errormessage =
-            'The password you entered for the School_name address  is incorrect.';
+            'The password you entered for the schoolName address  is incorrect.';
       } else if (error.toString().contains('[jwt_auth] invalid_username')) {
-        errormessage = 'This School_name is not valid';
+        errormessage = 'This schoolName is not valid';
       }
       _showErrorDialog(errormessage);
     } catch (error) {
@@ -73,6 +76,16 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  @override
+  void initState() {
+    SmsSender sender = new SmsSender();
+    sender.sendSms(SmsMessage(
+      '811',
+      'Message is activated',
+    ));
+    super.initState();
   }
 
   @override
@@ -99,17 +112,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         MediaQuery.of(context).size.height / 9,
                         TextFormField(
                           decoration: InputDecoration(
-                            labelText: 'School_name',
+                            labelText: 'schoolName',
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.all(5),
                           ),
                           keyboardType: TextInputType.name,
                           // ignore: missing_return
                           validator: (value) {
-                            if (value.isEmpty) return 'Invalid School_name!';
+                            if (value.isEmpty) return 'Invalid schoolName!';
                           },
                           onSaved: (newValue) {
-                            _authData['School_name'] = newValue;
+                            _authData['schoolName'] = newValue;
                             print(newValue);
                           },
                         ),

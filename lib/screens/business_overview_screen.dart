@@ -1,73 +1,158 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sms_maintained/sms.dart';
 import '../providers/auth.dart';
+import '../providers/school.dart';
+import 'dart:async';
 
-class BusinessOverViewScreen extends StatelessWidget {
+class BusinessOverViewScreen extends StatefulWidget {
   static const routeName = '/home';
+
+  @override
+  _BusinessOverViewScreenState createState() => _BusinessOverViewScreenState();
+}
+
+class _BusinessOverViewScreenState extends State<BusinessOverViewScreen> {
+  //   Timer timer;
+//   int counter = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  sendMessage(int index, String address, String message, String id) {
+    SmsSender sender = new SmsSender();
+    if (index <= 10) {
+      print('This is Running-- $index');
+      sender.sendSms(
+        SmsMessage(
+          address,
+          message,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('BuildContext Called');
+    // new Timer.periodic(Duration(seconds: 60), (Timer t) => setState(() {}));
     return Scaffold(
       drawer: Drawer(),
       appBar: AppBar(
         title: Text(
-          Provider.of<Auth>(context).schoolName,
+          Provider.of<Auth>(context, listen: false).schoolName.toString(),
           style: TextStyle(color: Colors.black),
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.search),
-        //     onPressed: () {},
-        //   ),
-        //   IconButton(
-        //     icon: Icon(Icons.settings),
-        //     onPressed: () {},
-        //   ),
-        // ],
+        actions: [
+          RaisedButton(
+            onPressed: () {
+              Provider.of<Auth>(context, listen: false).logOut();
+            },
+            child: Text('Log Out'),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-        child: Container(
-          height: 100,
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40.0),
-            ),
-            child: Center(
-              child: ListTile(
-                title: Text('Gustavo'),
-                trailing: Container(
-                    height: 40,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[200],
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.blue,
-                    )),
-                leading: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xff7c94b6),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                    border: Border.all(
-                      color: Colors.black,
-                      // width: 8,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
+        child: FutureBuilder(
+          future: Records().getMessages(
+            Provider.of<Auth>(context, listen: false).schoolId,
           ),
+          builder: (context, snapshot) {
+            // new Timer.periodic(
+            //     Duration(seconds: 30), (Timer t) => setState(() {}));
+            // print('Timer Working');
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  var dataOfApi = snapshot.data['records'][index];
+
+                  String address = dataOfApi['Contact'];
+                  sendMessage(
+                      index, address, dataOfApi['Message'], dataOfApi['id']);
+
+                  return Container(
+                    height: 100,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40.0),
+                      ),
+                      child: Center(
+                        child: ListTile(
+                          title: Text(dataOfApi['Message']),
+                          subtitle: Text(dataOfApi['Contact']),
+                          trailing: Text('Sent'),
+                          leading: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: const Color(0xff7c94b6),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(
+                              child: Text(dataOfApi['id']),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                itemCount: snapshot.data['records'].length,
+              );
+            }
+            return CircularProgressIndicator();
+          },
         ),
       ),
     );
   }
 }
+// class BusinessOverViewScreen extends StatefulWidget {
+//   static const routeName = '/home';
+//   BusinessOverViewScreen({Key key, this.title}) : super(key: key);
+//   final String title;
+
+//   @override
+//   _BusinessOverViewScreenState createState() => _BusinessOverViewScreenState();
+// }
+
+// class _BusinessOverViewScreenState extends State<BusinessOverViewScreen> {
+//   Timer timer;
+//   int counter = 0;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     timer = Timer.periodic(Duration(seconds: 1), (Timer t) => addValue());
+//   }
+
+//   void addValue() {
+//     setState(() {
+//       counter++;
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     timer?.cancel();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     print('BuildContext Called');
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.title.toString()),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[Text(counter.toString())],
+//         ),
+//       ),
+//     );
+//   }
+// }

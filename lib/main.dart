@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:sole_entrepreneur/screens/business_overview_screen.dart';
-import 'package:sole_entrepreneur/screens/splash_screen.dart';
+import 'package:haider_app/screens/business_overview_screen.dart';
+import 'package:haider_app/screens/splash_screen.dart';
 
-// import './screens/selection_screen.dart';
 import './screens/login_screen.dart';
-// import './screens/register_screen.dart';
-// import './screens/selection_screen.dart';
+
 import './providers/auth.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // await Auth().signIn('kaleem.excel@gmail.com', 'Developer');
-  // await Auth().register(
-  //     'shary101@gmail.com', "csdwx9spq", "matshary", "test", "testlast");
-  // await Auth().authethicate('The Four School', 'software');
+  // await Auth().deleteMessages('', '23');
   runApp(MyApp());
 }
 
@@ -32,7 +27,8 @@ class MyApp extends StatelessWidget {
         child: Consumer<Auth>(builder: (ctx, auth, _) {
           // print(auth.isAuth);
           return MaterialApp(
-            title: 'Flutter Demo',
+            debugShowCheckedModeBanner: false,
+            title: '''Haider's App''',
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.white,
               primaryColor: Color.fromRGBO(124, 116, 146, 1),
@@ -57,7 +53,6 @@ class MyApp extends StatelessWidget {
                   ),
             routes: {
               LoginScreen.routeName: (ctx) => LoginScreen(),
-              // RegisterScreen.routeName: (ctx) => RegisterScreen(),
               BusinessOverViewScreen.routeName: (ctx) =>
                   BusinessOverViewScreen()
             },

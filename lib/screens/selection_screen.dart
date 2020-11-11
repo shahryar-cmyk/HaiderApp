@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sole_entrepreneur/screens/login_screen.dart';
-// import 'package:sole_entrepreneur/screens/register_screen.dart';
+import 'package:haider_app/screens/login_screen.dart';
+// import 'package:haider_app/screens/register_screen.dart';
 import '../widgets/button.dart';
 
 class SelectionScreen extends StatelessWidget {
