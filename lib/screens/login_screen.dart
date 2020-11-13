@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       // await print(_authData['schoolName']);
-      await Provider.of<Auth>(context, listen: false).authethicate(
+      await Provider.of<EmailAuth>(context, listen: false).authethicate(
         _authData['schoolName'],
         _authData['password'],
       );

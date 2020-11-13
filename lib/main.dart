@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (context) => Auth(),
+            create: (context) => EmailAuth(),
           ),
         ],
-        child: Consumer<Auth>(builder: (ctx, auth, _) {
+        child: Consumer<EmailAuth>(builder: (ctx, auth, _) {
           // print(auth.isAuth);
           return MaterialApp(
             debugShowCheckedModeBanner: false,

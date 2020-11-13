@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sms_maintained/sms.dart';
 import '../providers/auth.dart';
 import '../providers/school.dart';
-import 'dart:async';
+// import 'dart:async';
 
 class BusinessOverViewScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -41,13 +41,13 @@ class _BusinessOverViewScreenState extends State<BusinessOverViewScreen> {
       drawer: Drawer(),
       appBar: AppBar(
         title: Text(
-          Provider.of<Auth>(context, listen: false).schoolName.toString(),
+          Provider.of<EmailAuth>(context, listen: false).schoolName.toString(),
           style: TextStyle(color: Colors.black),
         ),
         actions: [
           RaisedButton(
             onPressed: () {
-              Provider.of<Auth>(context, listen: false).logOut();
+              Provider.of<EmailAuth>(context, listen: false).logOut();
             },
             child: Text('Log Out'),
           ),
@@ -57,7 +57,7 @@ class _BusinessOverViewScreenState extends State<BusinessOverViewScreen> {
         padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
         child: FutureBuilder(
           future: Records().getMessages(
-            Provider.of<Auth>(context, listen: false).schoolId,
+            Provider.of<EmailAuth>(context, listen: false).schoolId,
           ),
           builder: (context, snapshot) {
             // new Timer.periodic(
@@ -69,8 +69,8 @@ class _BusinessOverViewScreenState extends State<BusinessOverViewScreen> {
                   var dataOfApi = snapshot.data['records'][index];
 
                   String address = dataOfApi['Contact'];
-                  sendMessage(
-                      index, address, dataOfApi['Message'], dataOfApi['id']);
+                  // sendMessage(
+                  //     index, address, dataOfApi['Message'], dataOfApi['id']);
 
                   return Container(
                     height: 100,
@@ -109,50 +109,3 @@ class _BusinessOverViewScreenState extends State<BusinessOverViewScreen> {
     );
   }
 }
-// class BusinessOverViewScreen extends StatefulWidget {
-//   static const routeName = '/home';
-//   BusinessOverViewScreen({Key key, this.title}) : super(key: key);
-//   final String title;
-
-//   @override
-//   _BusinessOverViewScreenState createState() => _BusinessOverViewScreenState();
-// }
-
-// class _BusinessOverViewScreenState extends State<BusinessOverViewScreen> {
-//   Timer timer;
-//   int counter = 0;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     timer = Timer.periodic(Duration(seconds: 1), (Timer t) => addValue());
-//   }
-
-//   void addValue() {
-//     setState(() {
-//       counter++;
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     timer?.cancel();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     print('BuildContext Called');
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.title.toString()),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[Text(counter.toString())],
-//         ),
-//       ),
-//     );
-//   }
-// }
