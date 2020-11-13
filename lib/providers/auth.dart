@@ -83,7 +83,7 @@ class EmailAuth with ChangeNotifier {
     prefs.clear();
   }
 
-  Future<void> tryAutoLogin() async {
+  Future<bool> tryAutoLogin() async {
     print('Auto Login Runining');
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
